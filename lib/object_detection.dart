@@ -146,8 +146,12 @@ class ObjectDetection {
   ) {
     log('Running inference...');
 
+// Normalize the input
+    List<List<List<num>>> normalizedInput = normalizeInput(imageMatrix);
+
     // Set input tensor [1, 300, 300, 3]
-    final input = [imageMatrix];
+    final input = [normalizedInput];
+    // final input = [imageMatrix];
 
     // Set output tensor
     // Scores: [1, 10],
@@ -164,5 +168,15 @@ class ObjectDetection {
     _interpreter!.runForMultipleInputs([input], output);
 
     return output.values.toList();
+  }
+
+  List<List<List<num>>> normalizeInput(List<List<List<num>>> imageMatrix) {
+    return imageMatrix.map((row) {
+      return row.map((pixel) {
+        return pixel.map((value) {
+          return (value / 127.5) - 1;
+        }).toList();
+      }).toList();
+    }).toList();
   }
 }
