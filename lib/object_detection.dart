@@ -113,7 +113,7 @@ class ObjectDetection {
     for (var i = 0; i < numberOfDetections; i++) {
       print(
           "[$i] ${classification[i]} => ${scoresTensor[i].toStringAsFixed(2)}");
-      if (scoresTensor[i] > 0.7) {
+      if (scoresTensor[i] > 0.5) {
         // Rectangle drawing
         img.drawRect(
           imageInput,
