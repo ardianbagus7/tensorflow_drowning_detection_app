@@ -236,9 +236,9 @@ class _DetectorServer {
 
     convertCameraImageToImage(cameraImage).then((image) {
       if (image != null) {
-        // if (Platform.isAndroid) {
-        //   image = image_lib.copyRotate(image, angle: 90);
-        // }
+        if (Platform.isAndroid) {
+          image = image_lib.copyRotate(image, angle: 90);
+        }
 
         final results = analyseImage(image, preConversionTime);
         _sendPort.send(_Command(_Codes.result, args: [results]));
