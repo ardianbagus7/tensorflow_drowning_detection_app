@@ -2,8 +2,10 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:object_detection_ssd_mobilenet_v2/object_detection.dart';
+import 'object_detection.dart';
 import 'dart:io' show Platform;
+
+import 'ui/camera_screen.dart';
 
 void main() => runApp(const MyApp());
 
@@ -79,6 +81,28 @@ class _MyHomeState extends State<MyHome> {
                   //       size: 64,
                   //     ),
                   //   ),
+                  IconButton(
+                    onPressed: () async {
+                      // final result = await imagePicker.pickImage(
+                      //   source: ImageSource.camera,
+                      // );
+                      // if (result != null) {
+                      //   image =
+                      //       objectDetection!.analyseImage(result.path);
+                      //   setState(() {});
+                      // }
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const CameraScreen(),
+                        ),
+                      );
+                    },
+                    icon: const Icon(
+                      Icons.camera,
+                      size: 64,
+                    ),
+                  ),
                   IconButton(
                     onPressed: () async {
                       final result = await imagePicker.pickImage(

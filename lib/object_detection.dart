@@ -6,9 +6,6 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 
 class ObjectDetection {
   static const String _modelPath = 'assets/model.tflite';
-  // 'assets/custom_ssd_mobilenet_v2_fpn_lite_320x320.tflite';
-  //  'assets/custom_ssd_mobilenet_v2.tflite';
-  //custom_ssd_mobilenet_v2_fpn_lite_320x320.tflite
   static const String _labelPath = 'assets/labels.txt';
 
   Interpreter? _interpreter;
@@ -137,7 +134,7 @@ class ObjectDetection {
       }
     }
 
-    log('Done.');
+    print('Done. Frame = ${image.width} X ${image.height}');
     return img.encodeJpg(imageInput);
   }
 
