@@ -101,7 +101,7 @@ class _DetectorWidgetState extends State<DetectorWidget>
           child: CameraPreview(_controller),
         ),
         // Stats
-        _statsWidget(),
+        // _statsWidget(),
         // Bounding boxes
         AspectRatio(
           aspectRatio: aspect,
