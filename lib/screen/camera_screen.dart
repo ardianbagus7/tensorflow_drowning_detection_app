@@ -12,23 +12,8 @@ class CameraScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     ScreenParams.screenSize = MediaQuery.sizeOf(context);
     return Scaffold(
-      appBar: const CustomAppBar(
-        title: "Deteksi Dengan Gambar",
-      ),
       backgroundColor: Theme.of(context).colorScheme.surfaceVariant,
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 20),
-          Expanded(
-            child: Center(
-              child: DetectorWidget(),
-            ),
-          ),
-          const SizedBox(height: 20),
-        ],
-      ),
+      body: const DetectorWidget(),
     );
   }
 }

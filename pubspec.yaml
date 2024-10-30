@@ -41,6 +41,7 @@ dependencies:
   go_router: ^10.1.0
   shared_preferences: ^2.2.0
   percent_indicator: ^4.2.3
+  camerawesome: ^1.4.0
 
 dev_dependencies:
   flutter_test:

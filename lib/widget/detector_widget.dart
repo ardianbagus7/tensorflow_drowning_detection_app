@@ -3,10 +3,13 @@ import 'dart:isolate';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:object_detection_ssd_mobilenet_v2/screen/old_photo_screen.dart';
+import 'package:percent_indicator/percent_indicator.dart';
 
 import '../model/recognition.dart';
 import '../model/screen_params.dart';
 import '../service/detector_service.dart';
+import '../service/object_detection.dart';
 import 'box_widget.dart';
 import 'stats_widget.dart';
 
@@ -39,6 +42,8 @@ class _DetectorWidgetState extends State<DetectorWidget>
   /// Results to draw bounding boxes
   List<Recognition>? results;
 
+  List<ObjectResult> detectionResults = [];
+
   /// Realtime stats
   Map<String, String>? stats;
 
@@ -60,6 +65,7 @@ class _DetectorWidgetState extends State<DetectorWidget>
           setState(() {
             results = values['recognitions'];
             stats = values['stats'];
+            detectionResults = values['results'];
           });
         });
       });
@@ -92,21 +98,30 @@ class _DetectorWidgetState extends State<DetectorWidget>
       return const SizedBox.shrink();
     }
 
-    var aspect = 1 / _controller.value.aspectRatio;
+    // var aspect = 1 / _controller.value.aspectRatio;
+    var aspect = 9 / 16;
 
-    return Stack(
+    return Column(
       children: [
         AspectRatio(
           aspectRatio: aspect,
-          child: CameraPreview(_controller),
+          child: Stack(
+            children: [
+              AspectRatio(
+                aspectRatio: aspect,
+                child: CameraPreview(_controller),
+              ),
+              // Stats
+
+              // Bounding boxes
+              AspectRatio(
+                aspectRatio: aspect,
+                child: _boundingBoxes(),
+              ),
+            ],
+          ),
         ),
-        // Stats
-        // _statsWidget(),
-        // Bounding boxes
-        AspectRatio(
-          aspectRatio: aspect,
-          child: _boundingBoxes(),
-        ),
+        Expanded(child: _statsWidget()),
       ],
     );
   }
@@ -119,10 +134,40 @@ class _DetectorWidgetState extends State<DetectorWidget>
             child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: stats!.entries
-                    .map<Widget>((e) => StatsWidget(e.key, e.value))
-                    .toList(),
+                children: [
+                  Text(
+                    "Jumlah Deteksi (${detectionResults.length})",
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  Expanded(
+                    child: ListView.builder(
+                      itemCount: detectionResults.length,
+                      itemBuilder: (context, index) {
+                        final e = detectionResults[index];
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 8.0),
+                          child: LinearPercentIndicator(
+                            animation: true,
+                            lineHeight: 25.0,
+                            animationDuration: 0,
+                            percent: e.score,
+                            leading: Text(e.object, textAlign: TextAlign.start),
+                            center: Text(
+                                "${(e.score * 100).toStringAsFixed(1)}%",
+                                textAlign: TextAlign.center),
+                            barRadius: const Radius.circular(10),
+                            progressColor: Colors.green,
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                  ...stats!.entries
+                      .map<Widget>((e) => StatsWidget(e.key, e.value))
+                      .toList()
+                ],
               ),
             ),
           ),

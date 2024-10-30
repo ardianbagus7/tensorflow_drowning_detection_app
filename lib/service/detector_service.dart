@@ -14,6 +14,7 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 
 import '../model/recognition.dart';
 import '../utils/image_utils.dart';
+import 'object_detection.dart';
 
 ///////////////////////////////////////////////////////////////////////////////
 // **WARNING:** This is not production code and is only intended to be used for
@@ -307,6 +308,7 @@ class _DetectorServer {
 
     /// Generate recognitions
     List<Recognition> recognitions = [];
+    List<ObjectResult> results = [];
     for (int i = 0; i < numberOfDetections; i++) {
       // print("[$i] ${classification[i]} => ${scores[i].toStringAsFixed(2)}");
       // Prediction score
@@ -315,6 +317,7 @@ class _DetectorServer {
       var label = classification[i];
 
       if (score > confidence) {
+        results.add(ObjectResult(object: classification[i], score: score));
         print(
             "DETECTED =>  ${classification[i]} => ${scores[i].toStringAsFixed(2)}");
         recognitions.add(
@@ -332,12 +335,13 @@ class _DetectorServer {
     return {
       "recognitions": recognitions,
       "stats": <String, String>{
-        'Conversion time:': conversionElapsedTime.toString(),
-        'Pre-processing time:': preProcessElapsedTime.toString(),
-        'Inference time:': inferenceElapsedTime.toString(),
-        'Total prediction time:': totalElapsedTime.toString(),
-        'Frame': '${image.width} X ${image.height}',
+        // 'Conversion time:': conversionElapsedTime.toString(),
+        // 'Pre-processing time:': preProcessElapsedTime.toString(),
+        // 'Inference time:': inferenceElapsedTime.toString(),
+        'Durasi Deteksi:': "${totalElapsedTime.toString()} ms",
+        // 'Frame': '${image.width} X ${image.height}',
       },
+      "results": results,
     };
   }
 
